@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>송금</h2>
+<p>현재 잔액: <b>{{ me['balance'] }}</b>원</p>
+
+<form method="post" action="{{ url_for('charge') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button type="submit">10,000원 충전 (테스트용)</button>
+</form>
+
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <p>받는 사람 <input name="to_username" required></p>
+  <p>금액 <input name="amount" type="number" min="1" required></p>
+  <button type="submit">송금</button>
+</form>
+
+<h3>거래 내역</h3>
+<ul>
+  {% for t in history %}
+    <li>
+      {% if t['from_id'] == me['id'] %}
+        {{ t['to_name'] }}님에게 -{{ t['amount'] }}원
+      {% else %}
+        {{ t['from_name'] }}님으로부터 +{{ t['amount'] }}원
+      {% endif %}
+      ({{ t['created_at'] }})
+    </li>
+  {% else %}
+    <li>거래 내역이 없습니다.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

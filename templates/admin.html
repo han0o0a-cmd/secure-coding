@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>관리자 페이지</h2>
+
+<h3>사용자</h3>
+<table border="1">
+  <tr><th>ID</th><th>아이디</th><th>잔액</th><th>상태</th><th>관리</th></tr>
+  {% for u in users %}
+  <tr>
+    <td>{{ u['id'] }}</td>
+    <td>{{ u['username'] }}{% if u['is_admin'] %} (관리자){% endif %}</td>
+    <td>{{ u['balance'] }}</td>
+    <td>{% if u['is_dormant'] %}휴면{% else %}정상{% endif %}</td>
+    <td>
+      {% if not u['is_admin'] %}
+      <form action="{{ url_for('admin_toggle_dormant', uid=u['id']) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">{% if u['is_dormant'] %}해제{% else %}휴면{% endif %}</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>상품</h3>
+<table border="1">
+  <tr><th>ID</th><th>상품명</th><th>판매자</th><th>상태</th><th>관리</th></tr>
+  {% for p in products %}
+  <tr>
+    <td>{{ p['id'] }}</td>
+    <td>{{ p['title'] }}</td>
+    <td>{{ p['seller'] }}</td>
+    <td>{% if p['is_blocked'] %}차단{% else %}정상{% endif %}</td>
+    <td>
+      <form action="{{ url_for('admin_toggle_block', pid=p['id']) }}" method="post" style="display:inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">{% if p['is_blocked'] %}차단해제{% else %}차단{% endif %}</button>
+      </form>
+      <form action="{{ url_for('admin_delete_product', pid=p['id']) }}" method="post" style="display:inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>신고 내역</h3>
+<table border="1">
+  <tr><th>ID</th><th>신고자</th><th>대상</th><th>사유</th><th>일시</th></tr>
+  {% for r in reports %}
+  <tr>
+    <td>{{ r['id'] }}</td>
+    <td>{{ r['reporter'] }}</td>
+    <td>{{ r['target_type'] }} #{{ r['target_id'] }}</td>
+    <td>{{ r['reason'] }}</td>
+    <td>{{ r['created_at'] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

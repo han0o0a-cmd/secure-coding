@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>상품 등록</h2>
+<form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <p>상품명 <input name="title" required></p>
+  <p>가격 <input name="price" type="number" min="0" required></p>
+  <p>설명 <textarea name="description"></textarea></p>
+  <p>사진 <input name="image" type="file" accept="image/*"></p>
+  <button type="submit">등록</button>
+</form>
+{% endblock %}

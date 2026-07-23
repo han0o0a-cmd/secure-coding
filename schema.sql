@@ -1,0 +1,47 @@
+CREATE TABLE IF NOT EXISTS user (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  bio TEXT DEFAULT '',
+  balance INTEGER NOT NULL DEFAULT 0 CHECK(balance >= 0),
+  is_admin INTEGER NOT NULL DEFAULT 0,
+  is_dormant INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS product (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  price INTEGER NOT NULL CHECK(price >= 0),
+  image_path TEXT,
+  seller_id INTEGER NOT NULL REFERENCES user(id),
+  is_blocked INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS report (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  reporter_id INTEGER NOT NULL REFERENCES user(id),
+  target_type TEXT NOT NULL CHECK(target_type IN ('user','product')),
+  target_id INTEGER NOT NULL,
+  reason TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(reporter_id, target_type, target_id)
+);
+
+CREATE TABLE IF NOT EXISTS message (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sender_id INTEGER NOT NULL REFERENCES user(id),
+  receiver_id INTEGER REFERENCES user(id),
+  content TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS transfer (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  from_id INTEGER NOT NULL REFERENCES user(id),
+  to_id INTEGER NOT NULL REFERENCES user(id),
+  amount INTEGER NOT NULL CHECK(amount > 0),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);

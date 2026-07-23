@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>사용자 목록</h2>
+<ul>
+  {% for u in users %}
+    <li>
+      <a href="{{ url_for('user_profile', uid=u['id']) }}">{{ u['username'] }}</a>
+      <a href="{{ url_for('chat_direct', uid=u['id']) }}">1:1 채팅</a>
+    </li>
+  {% else %}
+    <li>다른 사용자가 없습니다.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

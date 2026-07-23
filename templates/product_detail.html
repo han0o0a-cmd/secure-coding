@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ p['title'] }}</h2>
+{% if p['image_path'] %}
+  <img src="{{ url_for('static', filename='uploads/' ~ p['image_path']) }}" width="300">
+{% endif %}
+<p>가격: {{ p['price'] }}원</p>
+<p>판매자: <a href="{{ url_for('user_profile', uid=p['seller_id']) }}">{{ p['seller'] }}</a></p>
+<p>{{ p['description'] }}</p>
+{% if current_user and current_user['id'] == p['seller_id'] %}
+  <a href="{{ url_for('product_edit', pid=p['id']) }}">수정</a>
+{% endif %}
+{% if current_user %}
+  <a href="{{ url_for('report', type='product', id=p['id']) }}">이 상품 신고</a>
+{% endif %}
+{% endblock %}

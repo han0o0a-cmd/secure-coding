@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>마이페이지</h2>
+<p>아이디: {{ me['username'] }}</p>
+<p>잔액: {{ me['balance'] }}원</p>
+
+<h3>소개글</h3>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="action" value="bio">
+  <textarea name="bio">{{ me['bio'] }}</textarea>
+  <button type="submit">수정</button>
+</form>
+
+<h3>비밀번호 변경</h3>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="action" value="password">
+  <p>현재 비밀번호 <input name="current_password" type="password" required></p>
+  <p>새 비밀번호 <input name="new_password" type="password" required></p>
+  <button type="submit">변경</button>
+</form>
+{% endblock %}

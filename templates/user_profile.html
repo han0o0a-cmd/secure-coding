@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ u['username'] }}</h2>
+{% if u['is_dormant'] %}<p><b>휴면 계정</b></p>{% endif %}
+{% if current_user['id'] != u['id'] %}
+  <a href="{{ url_for('chat_direct', uid=u['id']) }}">1:1 채팅</a>
+{% endif %}
+{% if current_user['id'] != u['id'] %}
+  <a href="{{ url_for('report', type='user', id=u['id']) }}">이 사용자 신고</a>
+{% endif %}
+<p>{{ u['bio'] }}</p>
+{% endblock %}

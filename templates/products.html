@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>상품 목록</h2>
+<form method="get">
+  <input name="q" value="{{ q }}" placeholder="상품 검색">
+  <button type="submit">검색</button>
+</form>
+<ul>
+  {% for p in products %}
+    <li><a href="{{ url_for('product_detail', pid=p['id']) }}">{{ p['title'] }}</a></li>
+  {% else %}
+    <li>상품이 없습니다.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

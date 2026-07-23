@@ -1,0 +1,30 @@
+const OTHER = parseInt(document.getElementById("meta").dataset.other, 10);
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ other['username'] }}님과의 대화</h2>
+<div id="log">
+  {% for m in history %}<p><b>{{ m['username'] }}</b>: {{ m['content'] }}</p>{% endfor %}
+</div>
+<input id="msg" maxlength="500">
+<button id="send">전송</button>
+<div id="meta" data-other="{{ other['id'] }}"></div>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+const OTHER = {{ other['id'] }};
+const s = io();
+s.on("connect", () => s.emit("join_dm", {other: OTHER}));
+const log = document.getElementById("log");
+s.on("message", d => {
+  const p = document.createElement("p");
+  const b = document.createElement("b");
+  b.textContent = d.username;
+  p.appendChild(b);
+  p.appendChild(document.createTextNode(": " + d.content));
+  log.appendChild(p);
+});
+document.getElementById("send").onclick = () => {
+  const i = document.getElementById("msg");
+  if (i.value.trim()) { s.emit("send", {content: i.value, to: OTHER}); i.value = ""; }
+};
+</script>
+{% endblock %}

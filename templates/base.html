@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><title>중고마켓</title></head>
+<body>
+<nav>
+  <a href="{{ url_for('index') }}">홈</a>
+  <a href="{{ url_for('products') }}">상품</a>
+  {% if current_user %}
+    <a href="{{ url_for('product_new') }}">상품등록</a>
+    <a href="{{ url_for('my_products') }}">내상품</a>
+    <a href="{{ url_for('chat') }}">채팅</a>
+    <a href="{{ url_for('users') }}">사용자</a>
+    <a href="{{ url_for('report') }}">신고</a>
+    <a href="{{ url_for('transfer') }}">송금</a>
+    <a href="{{ url_for('profile') }}">마이페이지</a>
+    {% if current_user['is_admin'] %}
+      <a href="{{ url_for('admin_index') }}">관리자</a>
+    {% endif %}
+    <span>{{ current_user['username'] }}님</span>
+    <form action="{{ url_for('logout') }}" method="post" style="display:inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit">로그아웃</button>
+    </form>
+  {% else %}
+    <a href="{{ url_for('login') }}">로그인</a>
+    <a href="{{ url_for('register') }}">회원가입</a>
+  {% endif %}
+</nav>
+<hr>
+{% with messages = get_flashed_messages() %}
+  {% for m in messages %}<p>{{ m }}</p>{% endfor %}
+{% endwith %}
+{% block content %}{% endblock %}
+</body>
+</html>

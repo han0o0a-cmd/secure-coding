@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>내 상품</h2>
+<ul>
+  {% for p in products %}
+    <li>
+      <a href="{{ url_for('product_detail', pid=p['id']) }}">{{ p['title'] }}</a>
+      {{ p['price'] }}원
+      {% if p['is_blocked'] %}<b>[차단됨]</b>{% endif %}
+      <a href="{{ url_for('product_edit', pid=p['id']) }}">수정</a>
+      <form action="{{ url_for('product_delete', pid=p['id']) }}" method="post" style="display:inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">삭제</button>
+      </form>
+    </li>
+  {% else %}
+    <li>등록한 상품이 없습니다.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

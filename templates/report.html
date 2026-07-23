@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>신고</h2>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <p>
+    대상 유형
+    <select name="target_type" required>
+      <option value="user" {% if prefill_type == 'user' %}selected{% endif %}>사용자</option>
+      <option value="product" {% if prefill_type == 'product' %}selected{% endif %}>상품</option>
+    </select>
+  </p>
+  <p>대상 번호 <input name="target_id" type="number" min="1" value="{{ prefill_id }}" required></p>
+  <p>신고 사유 <textarea name="reason" required></textarea></p>
+  <button type="submit">신고</button>
+</form>
+{% endblock %}
